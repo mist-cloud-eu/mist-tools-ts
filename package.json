@@ -1,0 +1,26 @@
+{
+  "name": "@mist-cloud-eu/mist-tools-ts",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mist-cloud-eu/mist-tools-ts.git"
+  },
+  "bugs": {
+    "url": "https://github.com/mist-cloud-eu/mist-tools-ts/issues"
+  },
+  "homepage": "https://github.com/mist-cloud-eu/mist-tools-ts#readme",
+  "devDependencies": {
+    "@types/node": "^16.11.64"
+  },
+  "dependencies": {
+    "@mistware/http-lib": "^1.0.0"
+  }
+}
