@@ -15,6 +15,6 @@ export function mistService(
   } else if (init !== undefined) init();
 }
 
-export function postToRapid(event: string, payload: any) {
+export function postToRapid(event: string, payload: object) {
   urlReq(`${process.env.RAPID}/${event}`, "POST", payload);
 }
