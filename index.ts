@@ -1,16 +1,18 @@
 import { urlReq } from "@mistware/http-lib";
 
-type Handler<T> = (envelope: Envelope<T>) => void;
+type Handler = (envelope: Envelope) => void;
 
-export type Envelope<T> = { payload: T; messageId: string; traceId: string };
+export type Envelope = { payload: string; messageId: string; traceId: string };
 export function mistService(
-  handlers: { [action: string]: Handler<any> | undefined },
+  handlers: { [action: string]: Handler | undefined },
   init?: () => void
 ) {
   const action = process.argv[process.argv.length - 2];
   const handler = handlers[action];
   if (handler !== undefined) {
-    const envelope = JSON.parse(process.argv[process.argv.length - 1]);
+    const envelope: Envelope = JSON.parse(
+      process.argv[process.argv.length - 1]
+    );
     handler(envelope);
   } else if (init !== undefined) init();
 }
