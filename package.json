@@ -1,6 +1,6 @@
 {
   "name": "@mist-cloud-eu/mist-tools-ts",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "",
   "main": "index.js",
   "scripts": {
@@ -17,10 +17,9 @@
     "url": "https://github.com/mist-cloud-eu/mist-tools-ts/issues"
   },
   "homepage": "https://github.com/mist-cloud-eu/mist-tools-ts#readme",
-  "devDependencies": {
-    "@types/node": "^16.11.64"
-  },
+  "devDependencies": {},
   "dependencies": {
+    "@types/node": "^16.11.64",
     "@mistware/http-lib": "^1.0.0"
   }
 }
