@@ -1,7 +1,10 @@
 "use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.postToRapids = exports.mistService = void 0;
-const http_lib_1 = require("@mistware/http-lib");
+const axios_1 = __importDefault(require("axios"));
 function mistService(handlers, init) {
     const action = process.argv[process.argv.length - 2];
     const handler = handlers[action];
@@ -14,6 +17,6 @@ function mistService(handlers, init) {
 }
 exports.mistService = mistService;
 function postToRapids(event, payload) {
-    (0, http_lib_1.urlReq)(`${process.env.RAPIDS}/${event}`, "POST", payload);
+    axios_1.default.post(`${process.env.RAPIDS}/${event}`, payload);
 }
 exports.postToRapids = postToRapids;
