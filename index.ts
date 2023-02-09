@@ -1,4 +1,4 @@
-import { urlReq } from "@mistware/http-lib";
+import axios from "axios";
 
 type Handler = (envelope: Envelope) => void;
 
@@ -18,5 +18,5 @@ export function mistService(
 }
 
 export function postToRapids(event: string, payload: any) {
-  urlReq(`${process.env.RAPIDS}/${event}`, "POST", payload);
+  axios.post(`${process.env.RAPIDS}/${event}`, payload);
 }
