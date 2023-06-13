@@ -14,9 +14,12 @@ export module PayloadTypes {
     passthrough: T;
   }
 }
-export type PayloadBuffer = Promise<Buffer>;
+export type PayloadBufferPromise = Promise<Buffer>;
 
-type Handler = (payloadBuffer: PayloadBuffer, envelope: Envelope) => void;
+type Handler = (
+  payloadBuffer: PayloadBufferPromise,
+  envelope: Envelope
+) => void;
 
 export type Envelope = { messageId: string; traceId: string };
 export async function mistService(
