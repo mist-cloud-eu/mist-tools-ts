@@ -1,3 +1,4 @@
+import { MimeType, COMMON_MIME_TYPES } from "@mist-cloud-eu/ext2mime";
 import axios, { AxiosResponse } from "axios";
 
 export module PayloadTypes {
@@ -39,81 +40,106 @@ export async function mistService(
 type RapidsResponse = AxiosResponse<any, any>;
 export function postToRapids(
   event: "$reply",
-  payload: any,
-  contentType?: string
+  payload?: { content: any; mime: MimeType<string, string> }
 ): Promise<RapidsResponse>;
 export function postToRapids(
   event: "$join",
-  payload: string
+  payload: {
+    content: string;
+    mime: MimeType<"text", "plain">;
+  }
 ): Promise<RapidsResponse>;
 export function postToRapids(
   event: "$broadcast",
-  payload: { to: string; event: string; payload: any }
+  payload: {
+    content: { to: string; event: string; payload: any };
+    mime: MimeType<"application", "json">;
+  }
 ): Promise<RapidsResponse>;
 export function postToRapids(
   event: "$send",
-  payload: { to: string; event: string; payload: any }
+  payload: {
+    content: { to: string; event: string; payload: any };
+    mime: MimeType<"application", "json">;
+  }
 ): Promise<RapidsResponse>;
 export function postToRapids(
   event: "$retrieve",
   payload: {
-    file: string;
-    emit: string;
-    passthrough: any;
+    content: {
+      file: string;
+      emit: string;
+      passthrough: any;
+    };
+    mime: MimeType<"application", "json">;
   }
 ): Promise<RapidsResponse>;
 export function postToRapids(
   event: "$store",
   payload: {
-    contents: Buffer[];
-    emit: string;
-    passthrough: any;
+    content: {
+      contents: Buffer[];
+      emit: string;
+      passthrough: any;
+    };
+    mime: MimeType<"application", "json">;
   }
 ): Promise<RapidsResponse>;
 export function postToRapids(
   event: string,
-  payload: any
-): Promise<RapidsResponse>;
-export function postToRapids(
-  event: string,
-  payload: any,
-  contentType?: string
+  payload?: { content: any; mime: MimeType<string, string> }
 ) {
   return axios.post(
     `${process.env.RAPIDS}/${event}`,
     payload,
-    contentType !== undefined
-      ? {
-          headers: { "Content-Type": contentType },
-        }
+    payload !== undefined
+      ? { headers: { "Content-Type": payload.mime.toString() } }
       : {}
   );
 }
-export function replyToOrigin(payload: any, contentType?: string) {
-  return postToRapids("$reply", payload, contentType);
+export function replyToOrigin(payload?: {
+  content: any;
+  mime: MimeType<string, string>;
+}) {
+  return postToRapids("$reply", payload);
 }
 export function joinChannel(channel: string) {
-  return postToRapids("$join", channel);
+  return postToRapids("$join", {
+    content: channel,
+    mime: COMMON_MIME_TYPES.txt[0],
+  });
 }
 export function broadcastToChannel(to: string, event: string, payload: any) {
-  return postToRapids("$broadcast", { to, event, payload });
+  return postToRapids("$broadcast", {
+    content: { to, event, payload },
+    mime: COMMON_MIME_TYPES.json[0],
+  });
 }
 export function sendToClient(to: string, event: string, payload: any) {
-  return postToRapids("$send", { to, event, payload });
+  return postToRapids("$send", {
+    content: { to, event, payload },
+    mime: COMMON_MIME_TYPES.json[0],
+  });
 }
 export function requestFileThenEmit(
   file: string,
   emitEvent: string,
   passthrough: any
 ) {
-  return postToRapids("$retrieve", { file, emit: emitEvent, passthrough });
+  return postToRapids("$retrieve", {
+    content: { file, emit: emitEvent, passthrough },
+    mime: COMMON_MIME_TYPES.json[0],
+  });
 }
 export function storeFilesThenEmit(
   contents: Buffer[],
   emitEvent: string,
   passthrough: any
 ) {
-  return postToRapids("$store", { contents, emit: emitEvent, passthrough });
+  return postToRapids("$store", {
+    content: { contents, emit: emitEvent, passthrough },
+    mime: COMMON_MIME_TYPES.json[0],
+  });
 }
 
 export async function parseUploadFileInfo<T>(p: Promise<Buffer>) {
