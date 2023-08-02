@@ -3,7 +3,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.parseStoreFileContent = exports.parseRetrieveFileContent = exports.parseUploadFileInfo = exports.storeFilesThenEmit = exports.requestFileThenEmit = exports.sendToClient = exports.broadcastToChannel = exports.joinChannel = exports.replyFileToOrigin = exports.replyToOrigin = exports.postToRapids = exports.mistService = void 0;
+exports.MIME_TYPES = exports.parseStoreFileContent = exports.parseRetrieveFileContent = exports.parseUploadFileInfo = exports.storeFilesThenEmit = exports.requestFileThenEmit = exports.sendToClient = exports.broadcastToChannel = exports.joinChannel = exports.replyFileToOrigin = exports.replyToOrigin = exports.postToRapids = exports.mistService = void 0;
 const ext2mime_1 = require("@mist-cloud-eu/ext2mime");
 const axios_1 = __importDefault(require("axios"));
 const promises_1 = __importDefault(require("fs/promises"));
@@ -106,3 +106,9 @@ function getPayload() {
         });
     });
 }
+function mapValues(obj) {
+    let result = {};
+    Object.keys(obj).forEach((k) => (result[k] = obj[k][0]));
+    return result;
+}
+exports.MIME_TYPES = mapValues(ext2mime_1.COMMON_MIME_TYPES);

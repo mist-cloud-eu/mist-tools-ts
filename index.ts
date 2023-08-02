@@ -186,3 +186,13 @@ function getPayload() {
     });
   });
 }
+
+function mapValues<T extends { [key: string]: any }>(
+  obj: T
+): { [key in keyof T]: T[key][0] } {
+  let result: { [key: string]: any } = {};
+  Object.keys(obj).forEach((k) => (result[k] = obj[k][0]));
+  return result as { [key in keyof T]: T[key] };
+}
+
+export const MIME_TYPES = mapValues(COMMON_MIME_TYPES);
