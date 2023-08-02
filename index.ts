@@ -1,5 +1,10 @@
-import { MimeType, COMMON_MIME_TYPES } from "@mist-cloud-eu/ext2mime";
+import {
+  MimeType,
+  COMMON_MIME_TYPES,
+  optimisticMimeTypeOf,
+} from "@mist-cloud-eu/ext2mime";
 import axios, { AxiosResponse } from "axios";
+import fs from "fs/promises";
 
 export module PayloadTypes {
   export interface UploadFileInfo<T> {
@@ -97,11 +102,26 @@ export function postToRapids(
       : {}
   );
 }
-export function replyToOrigin(payload?: {
-  content: any;
-  mime: MimeType<string, string>;
-}) {
-  return postToRapids("$reply", payload);
+export function replyToOrigin(content: any, mime: MimeType<string, string>) {
+  return postToRapids("$reply", { content, mime });
+}
+export async function replyFileToOrigin(
+  path: string,
+  mime?: MimeType<string, string>
+) {
+  try {
+    let realMime =
+      mime !== undefined
+        ? mime
+        : optimisticMimeTypeOf(path.substring(path.lastIndexOf(".") + 1));
+    if (realMime === null) throw "Unknown file type. Add mimeType argument.";
+    await postToRapids("$reply", {
+      content: await fs.readFile(path),
+      mime: realMime,
+    });
+  } catch (e) {
+    throw e;
+  }
 }
 export function joinChannel(channel: string) {
   return postToRapids("$join", {

@@ -3,9 +3,10 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.parseStoreFileContent = exports.parseRetrieveFileContent = exports.parseUploadFileInfo = exports.storeFilesThenEmit = exports.requestFileThenEmit = exports.sendToClient = exports.broadcastToChannel = exports.joinChannel = exports.replyToOrigin = exports.postToRapids = exports.mistService = void 0;
+exports.parseStoreFileContent = exports.parseRetrieveFileContent = exports.parseUploadFileInfo = exports.storeFilesThenEmit = exports.requestFileThenEmit = exports.sendToClient = exports.broadcastToChannel = exports.joinChannel = exports.replyFileToOrigin = exports.replyToOrigin = exports.postToRapids = exports.mistService = void 0;
 const ext2mime_1 = require("@mist-cloud-eu/ext2mime");
 const axios_1 = __importDefault(require("axios"));
+const promises_1 = __importDefault(require("fs/promises"));
 async function mistService(handlers, init) {
     const action = process.argv[process.argv.length - 2];
     const handler = handlers[action];
@@ -23,10 +24,27 @@ function postToRapids(event, payload) {
         : {});
 }
 exports.postToRapids = postToRapids;
-function replyToOrigin(payload) {
-    return postToRapids("$reply", payload);
+function replyToOrigin(content, mime) {
+    return postToRapids("$reply", { content, mime });
 }
 exports.replyToOrigin = replyToOrigin;
+async function replyFileToOrigin(path, mime) {
+    try {
+        let realMime = mime !== undefined
+            ? mime
+            : (0, ext2mime_1.optimisticMimeTypeOf)(path.substring(path.lastIndexOf(".") + 1));
+        if (realMime === null)
+            throw "Unknown file type. Add mimeType argument.";
+        await postToRapids("$reply", {
+            content: await promises_1.default.readFile(path),
+            mime: realMime,
+        });
+    }
+    catch (e) {
+        throw e;
+    }
+}
+exports.replyFileToOrigin = replyFileToOrigin;
 function joinChannel(channel) {
     return postToRapids("$join", {
         content: channel,
