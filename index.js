@@ -19,9 +19,14 @@ async function mistService(handlers, init) {
 }
 exports.mistService = mistService;
 function postToRapids(event, payload) {
-    return axios_1.default.post(`${process.env.RAPIDS}/${event}`, payload, payload !== undefined
-        ? { headers: { "Content-Type": payload.mime.toString() } }
-        : {});
+    if (payload !== undefined) {
+        return axios_1.default.post(`${process.env.RAPIDS}/${event}`, payload.content, {
+            headers: { "Content-Type": payload.mime.toString() },
+        });
+    }
+    else {
+        return axios_1.default.post(`${process.env.RAPIDS}/${event}`);
+    }
 }
 exports.postToRapids = postToRapids;
 function replyToOrigin(content, mime) {

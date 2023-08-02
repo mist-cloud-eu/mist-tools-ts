@@ -94,13 +94,13 @@ export function postToRapids(
   event: string,
   payload?: { content: any; mime: MimeType<string, string> }
 ) {
-  return axios.post(
-    `${process.env.RAPIDS}/${event}`,
-    payload,
-    payload !== undefined
-      ? { headers: { "Content-Type": payload.mime.toString() } }
-      : {}
-  );
+  if (payload !== undefined) {
+    return axios.post(`${process.env.RAPIDS}/${event}`, payload.content, {
+      headers: { "Content-Type": payload.mime.toString() },
+    });
+  } else {
+    return axios.post(`${process.env.RAPIDS}/${event}`);
+  }
 }
 export function replyToOrigin(content: any, mime: MimeType<string, string>) {
   return postToRapids("$reply", { content, mime });
