@@ -45,7 +45,7 @@ export async function mistService(
 type RapidsResponse = AxiosResponse<any, any>;
 export function postToRapids(
   event: "$reply",
-  payload?: { content: any; mime: MimeType<string, string> }
+  payload: { content: any; mime: MimeType<string, string> }
 ): Promise<RapidsResponse>;
 export function postToRapids(
   event: "$join",
@@ -89,6 +89,10 @@ export function postToRapids(
     };
     mime: MimeType<"application", "json">;
   }
+): Promise<RapidsResponse>;
+export function postToRapids(
+  event: string,
+  payload?: { content: any; mime: MimeType<string, string> }
 ): Promise<RapidsResponse>;
 export function postToRapids(
   event: string,
